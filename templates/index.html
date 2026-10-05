@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMIU Student Assistant</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f6fa;
+}
+
+.chat-toggle {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 58px;
+    height: 58px;
+    border: none;
+    border-radius: 50%;
+    background: #0798ad;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    box-shadow: 0 5px 18px #0002;
+}
+
+.chat-widget {
+    display: none;
+    position: fixed;
+    right: 24px;
+    bottom: 94px;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    height: 540px;
+    max-height: calc(100vh - 120px);
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px #0002;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #0798ad;
+    color: white;
+    padding: 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.chat-header button {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #f7fafc;
+}
+
+.message {
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    max-width: 92%;
+    line-height: 1.5;
+    font-size: 14px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.bot-message {
+    background: #e5ebf3;
+    color: #263445;
+    border-bottom-left-radius: 4px;
+}
+
+.user-message {
+    background: #0798ad;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.welcome-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.quick-title {
+    font-size: 13px;
+    color: #5b6878;
+    margin: 18px 0 10px;
+    font-weight: bold;
+}
+
+.quick-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quick-option {
+    border: 1px solid #b8dfe5;
+    background: white;
+    color: #087f91;
+    border-radius: 18px;
+    padding: 9px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.quick-option:hover {
+    background: #e8f8fa;
+}
+
+.chat-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #e5eaf0;
+    background: white;
+}
+
+.chat-footer input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #d5e0e9;
+    border-radius: 22px;
+    outline: none;
+    font-size: 14px;
+}
+
+.chat-footer button {
+    width: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #0798ad;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .chat-widget {
+        right: 12px;
+        bottom: 82px;
+        width: calc(100vw - 24px);
+        height: min(560px, calc(100vh - 100px));
+    }
+
+    .chat-toggle {
+        right: 16px;
+        bottom: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button class="chat-toggle" id="chatToggle" aria-label="Open chat">💬</button>
+
+<div class="chat-widget" id="chatWidget">
+    <div class="chat-header">
+        <span>GMIU Student Assistant</span>
+        <button id="closeChat" aria-label="Close chat">×</button>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <div class="message bot-message">
+            <div class="welcome-title">Hello! 👋 Welcome to GMIU.</div>
+            I am your GMIU Student Assistant. How can I help you today?
+
+            <div class="quick-title">Choose a topic to get started:</div>
+            <div class="quick-options">
+                <button class="quick-option" data-query="Show me the fee structure of all GMIU institutes">💰 Fees Structure</button>
+                <button class="quick-option" data-query="Show me the list of institutes and departments at GMIU">🏫 Institutes</button>
+                <button class="quick-option" data-query="Tell me about courses offered at GMIU">📚 Courses</button>
+                <button class="quick-option" data-query="Show me syllabus information at GMIU">📖 Syllabus</button>
+                <button class="quick-option" data-query="Explain the admission process at GMIU">📝 Admissions</button>
+                <button class="quick-option" data-query="Tell me about scholarships at GMIU">🎓 Scholarships</button>
+                <button class="quick-option" data-query="Tell me about placements at GMIU">💼 Placements</button>
+                <button class="quick-option" data-query="Tell me about student facilities at GMIU">🏟️ Campus Facilities</button>
+                <button class="quick-option" data-query="Show me GMIU circulars">📢 Circulars</button>
+                <button class="quick-option" data-query="Tell me about student cells at GMIU">🤝 Student Cells</button>
+            </div>
+        </div>
+    </div>
+
+    <form class="chat-footer" id="chatForm">
+        <input id="chatInput" type="text" placeholder="Ask your question..." autocomplete="off">
+        <button type="submit" aria-label="Send message">➤</button>
+    </form>
+</div>
+
+<script>
+const chatWidget = document.getElementById("chatWidget");
+const chatToggle = document.getElementById("chatToggle");
+const closeChat = document.getElementById("closeChat");
+const chatBody = document.getElementById("chatBody");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+
+chatToggle.addEventListener("click", () => {
+    chatWidget.style.display = "flex";
+    chatToggle.style.display = "none";
+});
+
+closeChat.addEventListener("click", () => {
+    chatWidget.style.display = "none";
+    chatToggle.style.display = "block";
+});
+
+function addMessage(text, type) {
+    const message = document.createElement("div");
+    message.className = "message " + type;
+    message.textContent = text;
+    chatBody.appendChild(message);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+async function sendQuestion(question) {
+    if (!question.trim()) return;
+
+    addMessage(question, "user-message");
+
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: question })
+        });
+
+        const data = await response.json();
+        addMessage(data.reply || data.answer || data.response || "I couldn't find an answer. Please try another question.", "bot-message");
+    } catch (error) {
+        addMessage("Sorry, something went wrong. Please try again.", "bot-message");
+    }
+}
+
+chatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const question = chatInput.value.trim();
+    if (!question) return;
+    chatInput.value = "";
+    await sendQuestion(question);
+});
+
+document.querySelectorAll(".quick-option").forEach(button => {
+    button.addEventListener("click", () => {
+        sendQuestion(button.dataset.query);
+    });
+});
+</script>
+
+</body>
+</html>
